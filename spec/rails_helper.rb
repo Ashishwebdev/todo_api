@@ -2,7 +2,7 @@
 
 # require database cleaner at the top level
 require 'database_cleaner'
-
+# require 'support/factory_bot'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
@@ -28,11 +28,13 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
-
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   # add `FactoryBot` methods
   config.include FactoryBot::Syntax::Methods
+
+  config.include RequestSpecHelper, type: :request
 
   # start by truncating all the tables but then use the faster transaction strategy the rest of the time.
   config.before(:suite) do
